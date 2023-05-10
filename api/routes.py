@@ -141,7 +141,7 @@ def login():
         return make_response('Could not verify. User does not exist.', 401, {'WWW-Authenticate' : 'Basic realm="Login required!"'})
         #cand nu exista un anumit user
     if check_password_hash(user.parola, auth.password):
-        token = jwt.encode({'id' : user.id, 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes = 2)}, app.config['SECRET_KEY'], algorithm='HS256')
+        token = jwt.encode({'id' : user.id, 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes = 15)}, app.config['SECRET_KEY'], algorithm='HS256')
 
         return jsonify({'token' : token})
     else: 
@@ -277,7 +277,7 @@ def delete_product(id_prod):
 
     return jsonify({'message' : 'Product deleted!'})    
 
-#!!!Pentru a adauga produse in cos
+#!!!Pentru a adauga produse in cos!!!
 
 @app.route('/add_product', methods = ['POST'])
 @token_required
