@@ -30,7 +30,7 @@ def token_required(f):
     return decorated
 
 
-#!!! RUTE UTILIZATORI !!!#
+#Endpoints utilizatori
 @app.route('/users', methods = ['GET'])
 @token_required
 def get_all_users(current_user):
@@ -141,7 +141,7 @@ def login():
         return make_response('Could not verify. User does not exist.', 401, {'WWW-Authenticate' : 'Basic realm="Login required!"'})
         #cand nu exista un anumit user
     if check_password_hash(user.parola, auth.password):
-        token = jwt.encode({'id' : user.id, 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes = 2)}, app.config['SECRET_KEY'], algorithm='HS256')
+        token = jwt.encode({'id' : user.id, 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes = 15)}, app.config['SECRET_KEY'], algorithm='HS256')
 
         return jsonify({'token' : token})
     else: 
@@ -149,7 +149,7 @@ def login():
    #cand parola este incorecta 
 
 
-#!!! RUTE COS DE CUMPARATURI !!!#
+#Endpoints cos de cumparaturi
 
 @app.route('/cart', methods=['POST'])
 @token_required
@@ -193,8 +193,7 @@ def delete_cart(current_user):
 
     return jsonify({'message' : 'Cart deleted!'})
 
-#!!! RUTE PRODUSE !!!#
-
+#Endpoints produse
 @app.route('/products', methods=['GET'])
 def get_all_products():
 
@@ -277,7 +276,7 @@ def delete_product(id_prod):
 
     return jsonify({'message' : 'Product deleted!'})    
 
-#!!!Pentru a adauga produse in cos
+#Endpoints detalii cos, adaugare produse in cosul creat si afisarea acestora
 
 @app.route('/add_product', methods = ['POST'])
 @token_required
