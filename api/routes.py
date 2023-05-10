@@ -278,7 +278,7 @@ def delete_product(id_prod):
 
 #Endpoints detalii cos, adaugare produse in cosul creat si afisarea acestora
 
-@app.route('/add_product', methods = ['POST'])
+@app.route('/cart/add_product', methods = ['POST'])
 @token_required
 def add_to_cart(current_user):
     produs_id = request.get_json()['produs_id']
@@ -321,6 +321,21 @@ def added_products(current_user):
     
     return jsonify({'produse din cos' : output})
 
+@app.route('/cart/delete_product/<id_produs>', methods = ['DELETE'])
+@token_required
+def delete_from_cart(current_user, id_produs):
+
+    cos = current_user.cos
+    produs = DetaliiCos.query.filter_by(id_produs = id_produs, id_cos = cos.id).first()
+
+    if not produs: 
+        return jsonify({'message' : 'Posibila eroare sau produsul a fost deja sters'})
+
+    db.session.delete(produs)
+    db.session.commit()
+
+    return jsonify({'message' : f'Produs sters din cosul cu id {cos.id}'})
+    
 
 
 
